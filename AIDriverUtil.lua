@@ -400,3 +400,17 @@ function AIDriverUtil.getMixerWagonFillLevelForFillTypes(object,fillType)
 		end
 	end
 end
+
+--- Is a sugarcane trailer attached ?
+---@param vehicle table
+function AIDriverUtil.hasSugarCaneTrailer(vehicle)
+	if vehicle.spec_shovel and vehicle.spec_trailer then 
+		return true
+	end
+	for _, implement in pairs(AIDriverUtil.getAllAttachedImplements(vehicle)) do
+		local object = implement.object
+		if object.spec_shovel and object.spec_trailer then 
+			return true
+		end
+	end
+end

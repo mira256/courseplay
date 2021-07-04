@@ -2310,5 +2310,11 @@ function AIDriver:isWorkingToolPositionReached(dt,positionIx)
 end
 
 function AIDriver:getWorkingToolPositionsSetting()
-	--- override
+	if self:hasSugarCaneTrailerToolPositions() then 
+		return self.settings.sugarCaneTrailerToolPositions
+	end
+end
+
+function AIDriver:hasSugarCaneTrailerToolPositions()
+	return self.settings.sugarCaneTrailerToolPositions:getHasSugarCaneTrailer()
 end

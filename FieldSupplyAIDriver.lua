@@ -41,10 +41,17 @@ function FieldSupplyAIDriver:init(vehicle)
 	self.supplyState = self.states.ON_REFILL_COURSE
 	self.mode=courseplay.MODE_FIELD_SUPPLY
 	self.debugChannel = courseplay.DBG_MODE_8
-	self:setHudContent()
+end
+
+function FieldSupplyAIDriver:postInit()
+    ---Refresh the Hud content here,as otherwise the moveable pipe is not 
+    ---detected the first time after loading a savegame. 
+    self:setHudContent()
+    FillableFieldworkAIDriver.postInit(self)
 end
 
 function FieldSupplyAIDriver:setHudContent()
+	self:findPipe()
 	AIDriver.setHudContent(self)
 	courseplay.hud:setFieldSupplyAIDriverContent(self.vehicle)
 end
@@ -53,7 +60,6 @@ function FieldSupplyAIDriver:start(startingPoint)
 	self.refillState = self.states.REFILL_DONE
 	AIDriver.start(self,startingPoint)
 	self.state = self.states.ON_UNLOAD_OR_REFILL_COURSE
-	self:findPipe() --for Augerwagons
 end
 
 function FieldSupplyAIDriver:stop(msgReference)
@@ -86,6 +92,7 @@ function FieldSupplyAIDriver:drive(dt)
 		self:updateInfoText()
 		if self.pipe then
 			self.pipe:setPipeState(AIDriverUtil.PIPE_STATE_OPEN)
+			self:isWorkingToolPositionReached(dt,1)
 			self.triggerHandler:enableFillTypeUnloadingAugerWagon()
 		else
 			self.triggerHandler:enableFillTypeUnloading()
@@ -172,4 +179,9 @@ end
 
 function FieldSupplyAIDriver:getCanShowDriveOnButton()
 	return AIDriver.getCanShowDriveOnButton(self) or self.refillState == self.states.WAITING_FOR_GETTING_UNLOADED
+end
+
+function FieldSupplyAIDriver:getWorkingToolPositionsSetting()
+	local setting = self.settings.pipeToolPositions
+	return setting:getHasMoveablePipe() and setting:hasValidToolPositions() and setting
 end
