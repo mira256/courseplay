@@ -3654,6 +3654,7 @@ function PipeToolPositionsSetting:getText()
 end
 
 function PipeToolPositionsSetting:validateCurrentValue()
+	self.hasMoveablePipe = nil
 	local pipeImplement = AIDriverUtil.getImplementWithSpecialization(self.vehicle,Pipe) or self.vehicle.spec_pipe and self.vehicle
 	if pipeImplement then
 		self.hasMoveablePipe = AIDriverUtil.hasImplementWithSpecialization(pipeImplement,Cylindered)
