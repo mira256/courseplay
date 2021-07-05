@@ -3655,7 +3655,9 @@ end
 
 function PipeToolPositionsSetting:validateCurrentValue()
 	local pipeImplement = AIDriverUtil.getImplementWithSpecialization(self.vehicle,Pipe) or self.vehicle.spec_pipe and self.vehicle
-	self.hasMoveablePipe = AIDriverUtil.hasImplementWithSpecialization(pipeImplement,Pipe)
+	if pipeImplement then
+		self.hasMoveablePipe = AIDriverUtil.hasImplementWithSpecialization(pipeImplement,Cylindered)
+	end
 end
 
 function PipeToolPositionsSetting:getHasMoveablePipe()
